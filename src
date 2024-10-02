@@ -1,0 +1,112 @@
+-- 1. Criar o Banco de Dados
+-- Desabilitar Safe Update temporariamente
+SET SQL_SAFE_UPDATES = 0;
+DROP DATABASE IF EXISTS GestaoFuncionarios; -- Limpar o banco de dados existente, se houver
+CREATE DATABASE IF NOT EXISTS GestaoFuncionarios;
+
+-- Selecionar o Banco de Dados
+USE GestaoFuncionarios;
+
+-- 2. Criar as Tabelas
+
+-- Tabela Departamentos
+CREATE TABLE IF NOT EXISTS Departamentos (
+    id_departamento INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(50) NOT NULL
+);
+
+-- Tabela Funcionarios
+CREATE TABLE IF NOT EXISTS Funcionarios (
+    id_funcionario INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    cargo VARCHAR(50) NOT NULL,
+    salario DECIMAL(10, 2) NOT NULL,
+    id_departamento INT,
+    FOREIGN KEY (id_departamento) REFERENCES Departamentos(id_departamento)
+);
+
+-- Tabela Salarios
+CREATE TABLE IF NOT EXISTS Salarios (
+    id_salario INT PRIMARY KEY AUTO_INCREMENT,
+    id_funcionario INT,
+    data DATE NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (id_funcionario) REFERENCES Funcionarios(id_funcionario)
+);
+
+-- 3. Inserir Dados
+
+-- Inserir Departamentos
+INSERT INTO Departamentos (nome) VALUES ('Recursos Humanos');
+INSERT INTO Departamentos (nome) VALUES ('Tecnologia');
+INSERT INTO Departamentos (nome) VALUES ('Vendas');
+
+-- Inserir Funcionários
+INSERT INTO Funcionarios (nome, cargo, salario, id_departamento) 
+VALUES ('Ana Souza', 'Gerente', 5000.00, 1);
+INSERT INTO Funcionarios (nome, cargo, salario, id_departamento) 
+VALUES ('Carlos Silva', 'Desenvolvedor', 4500.00, 2);
+INSERT INTO Funcionarios (nome, cargo, salario, id_departamento) 
+VALUES ('Mariana Lima', 'Vendedor', 3000.00, 3);
+
+-- Inserir Salários (certifique-se que os IDs dos funcionários correspondem)
+INSERT INTO Salarios (id_funcionario, data, valor) 
+VALUES (1, '2024-01-01', 5000.00); -- Salário de Ana Souza
+INSERT INTO Salarios (id_funcionario, data, valor) 
+VALUES (2, '2024-01-01', 4500.00); -- Salário de Carlos Silva
+INSERT INTO Salarios (id_funcionario, data, valor) 
+VALUES (3, '2024-01-01', 3000.00); -- Salário de Mariana Lima
+
+-- 4. Consultar Dados
+
+-- Listar todos os funcionários e seus respectivos departamentos
+SELECT Funcionarios.nome AS Funcionario, Funcionarios.cargo, Departamentos.nome AS Departamento
+FROM Funcionarios
+JOIN Departamentos ON Funcionarios.id_departamento = Departamentos.id_departamento;
+
+-- Mostrar o salário total de cada departamento
+SELECT Departamentos.nome AS Departamento, SUM(Funcionarios.salario) AS SalarioTotal
+FROM Funcionarios
+JOIN Departamentos ON Funcionarios.id_departamento = Departamentos.id_departamento
+GROUP BY Departamentos.nome;
+
+-- Verificar os salários históricos de um funcionário específico (por exemplo, Ana Souza)
+SELECT Funcionarios.nome, Salarios.data, Salarios.valor
+FROM Funcionarios
+JOIN Salarios ON Funcionarios.id_funcionario = Salarios.id_funcionario
+WHERE Funcionarios.nome = 'Ana Souza';
+
+-- 5. Atualizar Dados
+
+-- Atualizar o salário de um funcionário específico (por exemplo, Carlos Silva)
+UPDATE Funcionarios
+SET salario = 4800.00
+WHERE id_funcionario = 2;  -- Usando a chave primária para evitar erro
+
+-- Modificar o nome de um departamento (por exemplo, Vendas para Comercial)
+UPDATE Departamentos
+SET nome = 'Comercial'
+WHERE id_departamento = 3;  -- Usando a chave primária
+
+-- Reabilitar Safe Update se necessário
+SET SQL_SAFE_UPDATES = 1;
+
+-- 6. Deletar Dados
+
+-- Primeiro, vamos garantir que estamos lidando com um único funcionário
+-- Excluir um funcionário e todos os registros relacionados de salários (por exemplo, Mariana Lima)
+
+-- Encontrar o ID do funcionário que queremos excluir
+SET @id_funcionario_para_excluir = (SELECT id_funcionario FROM Funcionarios WHERE nome = 'Mariana Lima' LIMIT 1);
+
+-- Excluir os salários do funcionário
+DELETE FROM Salarios
+WHERE id_funcionario = @id_funcionario_para_excluir;
+
+-- Excluir o funcionário
+DELETE FROM Funcionarios
+WHERE id_funcionario = @id_funcionario_para_excluir;
+
+-- Remover um departamento (certifique-se de que não existam funcionários associados a ele)
+DELETE FROM Departamentos
+WHERE id_departamento = 3;  -- Supondo que o departamento de id 3 (Comercial) já não tem funcionários
