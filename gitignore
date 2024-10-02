@@ -1,0 +1,18 @@
+# Ignorar arquivos de log
+*.log
+
+# Ignorar arquivos de configuração de IDE
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+
+# Ignorar arquivos de banco de dados
+*.sql
+
+# Ignorar diretórios de sistema
+.DS_Store
+Thumbs.db
+
+# Ignorar arquivos de backup
+*~
