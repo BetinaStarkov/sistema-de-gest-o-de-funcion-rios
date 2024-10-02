@@ -1,0 +1,48 @@
+# GestaoFuncionarios
+
+Este projeto é um sistema de gestão de funcionários que permite gerenciar departamentos, funcionários e salários. O sistema foi desenvolvido utilizando MySQL e inclui a criação de tabelas, inserção, atualização, consulta e exclusão de dados.
+
+## Estrutura do Banco de Dados
+
+O banco de dados contém três tabelas principais:
+
+- **Departamentos**
+  - `id_departamento`: ID do departamento (chave primária).
+  - `nome`: Nome do departamento.
+
+- **Funcionarios**
+  - `id_funcionario`: ID do funcionário (chave primária).
+  - `nome`: Nome do funcionário.
+  - `cargo`: Cargo do funcionário.
+  - `salario`: Salário do funcionário.
+  - `id_departamento`: ID do departamento ao qual o funcionário pertence (chave estrangeira).
+
+- **Salarios**
+  - `id_salario`: ID do salário (chave primária).
+  - `id_funcionario`: ID do funcionário (chave estrangeira).
+  - `data`: Data em que o salário foi registrado.
+  - `valor`: Valor do salário.
+
+## Como Usar
+
+1. **Configuração do Banco de Dados**:
+   - Execute o script SQL fornecido para criar o banco de dados e as tabelas necessárias.
+   - Insira os dados iniciais conforme especificado no script.
+
+2. **Executar Consultas**:
+   - O sistema permite várias consultas, como listar funcionários, mostrar salários totais por departamento e verificar salários históricos.
+
+3. **Atualizações e Exclusões**:
+   - Você pode atualizar salários e excluir funcionários e departamentos conforme necessário.
+
+## Dependências
+
+- MySQL Server
+
+## Contribuições
+
+Sinta-se à vontade para contribuir com melhorias ou correções. 
+
+## Licença
+
+Este projeto está licenciado sob a [MIT License](LICENSE).
